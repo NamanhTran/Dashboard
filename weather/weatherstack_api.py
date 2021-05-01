@@ -1,43 +1,46 @@
 import requests, json, configparser
 
-def get_current_weather(location):
+def get_current_weather(api_key, location):
     # Read from the config file for nytime api key
-    config = configparser.ConfigParser()
-    config.read('../config.cfg')
+    # config = configparser.ConfigParser()
+    # config.read('../configs/weatherstack.cfg')
 
     params = {
-        'access_key': config['API Key']['weatherstack'],
+        'access_key': api_key,
         'query': location,
         'units': 'f'
     }
 
-    response = requests.get('http://api.weatherstack.com/current', params)
+    try:
+        response = requests.get('http://api.weatherstack.com/current', params)
 
-    weather_info = response.json()
+        weather_info = response.json()
 
-    print(weather_info)
+        return weather_info
+    
+    except:
+        return None
 
-    print(u'Current temperature in %s is %dF' % (weather_info['location']['name'], weather_info['current']['temperature']))
-
-    return weather_info
-
-def get_seven_day_forecast(location):
+# Need to pay $40 per month to use LOL
+def get_seven_day_forecast(api_key, location):
     # Read from the config file for nytime api key
-    config = configparser.ConfigParser()
-    config.read('../config.cfg')
+    # config = configparser.ConfigParser()
+    # config.read('../configs/weatherstack.cfg')
 
     params = {
-        'access_key': config['API Key']['weatherstack'],
+        'access_key': api_key,
         'query': location,
         'units': 'f',
         'forecast_days': 14
     }
+    
+    try:
 
-    response = requests.get('http://api.weatherstack.com/forecast', params)
+        response = requests.get('http://api.weatherstack.com/forecast', params)
 
-    weather_info = response.json()
+        weather_info = response.json()
 
-    return weather_info
-
-get_current_weather("Anaheim, United States of America")
-get_seven_day_forecast("Anaheim, United States of America")
+        return weather_info
+    
+    except:
+        return None
