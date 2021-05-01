@@ -30,6 +30,7 @@ def get_hackernoon_articles(tag, max_results):
         
         except NoSuchElementException:
             print("The hackernoon page has changed. This scraper needs to be updated! 1")
+            driver.close()
             return None
 
         try:
@@ -52,6 +53,7 @@ def get_hackernoon_articles(tag, max_results):
         
         except:
             print("The hackernoon page has changed. This scraper needs to be updated! 2")
+            driver.close()
             return None
 
         # Click next page
@@ -60,6 +62,7 @@ def get_hackernoon_articles(tag, max_results):
 
         except NoSuchElementException:
             print("The hackernoon page has changed. This scraper needs to be updated! 3")
+            driver.close()
             return None
 
     # Replaces broken images and 
@@ -90,6 +93,7 @@ def get_hackernoon_articles(tag, max_results):
             
             except NoSuchElementException:
                 print(f"Cannot get full title for {article['title']}")
+                driver.close()
                 return None
         
         # If the last three character is 'gif' then it is a broken image
@@ -100,6 +104,7 @@ def get_hackernoon_articles(tag, max_results):
 
             except NoSuchElementException:
                 print("The hackernoon page has changed. This scraper needs to be updated! 4")
+                driver.close()
                 return None
 
             # Get the image
