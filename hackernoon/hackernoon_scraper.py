@@ -1,12 +1,16 @@
 import os, json
 from selenium import webdriver
+from selenium.webdriver import FirefoxOptions
 from selenium.common.exceptions import NoSuchElementException
 
 def get_hackernoon_articles(tag, max_results):
     url = f"https://hackernoon.com/tagged/{tag}"
 
-    # Launch Firefox
-    driver = webdriver.Firefox()
+    # Launch Firefox in headless
+    opts = FirefoxOptions()
+    opts.add_argument("--headless")
+
+    driver = webdriver.Firefox(options=opts)
     driver.implicitly_wait(2)
 
     # Get the url
@@ -19,13 +23,13 @@ def get_hackernoon_articles(tag, max_results):
         try:
             # Get the articles and images for the articles
             articles = driver.find_elements_by_xpath("//article/div[@class='title-wrapper']/h2/a")
-            images = driver.find_elements_by_xpath("//article/div[@class='image-wrapper']/a/img")\
+            images = driver.find_elements_by_xpath("//article/div[@class='image-wrapper']/a/div/img")\
             
             # To remove the first article which is always an ad
-            images = images[1:]
+            #images = images[1:]
         
         except NoSuchElementException:
-            print("The hackernoon page has changed. This scraper needs to be updated!")
+            print("The hackernoon page has changed. This scraper needs to be updated! 1")
             return None
 
         try:
@@ -47,7 +51,7 @@ def get_hackernoon_articles(tag, max_results):
                 articles_info.append(article_info)
         
         except:
-            print("The hackernoon page has changed. This scraper needs to be updated!")
+            print("The hackernoon page has changed. This scraper needs to be updated! 2")
             return None
 
         # Click next page
@@ -55,7 +59,7 @@ def get_hackernoon_articles(tag, max_results):
             driver.find_element_by_xpath("//a[@aria-label='Next page']").click()
 
         except NoSuchElementException:
-            print("The hackernoon page has changed. This scraper needs to be updated!")
+            print("The hackernoon page has changed. This scraper needs to be updated! 3")
             return None
 
     # Replaces broken images and 
@@ -95,7 +99,7 @@ def get_hackernoon_articles(tag, max_results):
                 driver.get(article["url"])
 
             except NoSuchElementException:
-                print("The hackernoon page has changed. This scraper needs to be updated!")
+                print("The hackernoon page has changed. This scraper needs to be updated! 4")
                 return None
 
             # Get the image
@@ -108,8 +112,6 @@ def get_hackernoon_articles(tag, max_results):
             except NoSuchElementException:
                 print(f"No image found for {article['title']}")
 
-    print(json.dumps(articles_info, indent=4))
-
     driver.close()
 
-    return json.dumps(articles_info)
+    return articles_info
